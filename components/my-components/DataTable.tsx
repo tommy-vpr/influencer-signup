@@ -39,6 +39,8 @@ export type GeneratedCode = {
   status: Boolean;
   email: string;
   code: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export const columns: ColumnDef<GeneratedCode>[] = [
