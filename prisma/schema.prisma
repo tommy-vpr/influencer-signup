@@ -1,0 +1,54 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  email     String @unique
+  firstName String
+  lastName  String
+  password  String
+  role      String @default("admin")
+}
+
+model Influencer {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  email          String        @unique
+  firstName      String
+  lastName       String
+  state          String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?
+  password       String?
+
+  // One-to-One relation with Code
+  code           Code?         @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  codeId         String?       @unique // Unique foreign key for one-to-one with Code
+}
+
+model GeneratedCodes {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  code         String         @unique
+  status       Boolean        @default(false) 
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  email        String?         
+}
+
+model Code {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  code         String         @unique
+  status       Boolean        @default(false) // false means 'unused', true means 'used'
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt 
+  email        String?    
+
+  influencer   Influencer?    @relation // Back reference to Influencer for one-to-one
+}

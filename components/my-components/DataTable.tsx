@@ -14,7 +14,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -35,12 +34,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { data } from "@/data";
-
 export type GeneratedCode = {
   id: string;
   status: Boolean;
   email: string;
+  code: string;
 };
 
 export const columns: ColumnDef<GeneratedCode>[] = [
@@ -48,6 +46,11 @@ export const columns: ColumnDef<GeneratedCode>[] = [
     accessorKey: "id",
     header: "ID",
     cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "code",
+    header: "Code",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("code")}</div>,
   },
   {
     accessorKey: "email",
@@ -115,7 +118,11 @@ export const columns: ColumnDef<GeneratedCode>[] = [
   },
 ];
 
-export function DataTable() {
+interface DataTableProps {
+  data: GeneratedCode[]; // Define the type of data expected
+}
+
+export function DataTable({ data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -123,6 +130,11 @@ export function DataTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10, // Set your default page size here
+  });
 
   const table = useReactTable({
     data,
@@ -140,7 +152,9 @@ export function DataTable() {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
+    onPaginationChange: setPagination, // Update pagination state
   });
 
   return (
@@ -164,20 +178,16 @@ export function DataTable() {
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -186,18 +196,16 @@ export function DataTable() {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -233,8 +241,15 @@ export function DataTable() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+          {/* &nbsp;| Showing rows&nbsp;
+          {table.getRowModel().rows.length > 0
+            ? `${table.getRowModel().rows[0]?.index + 1} - ${
+                table.getRowModel().rows.slice(-1)[0]?.index + 1
+              }`
+            : 0}
+          &nbsp;of {table.getCoreRowModel().rows.length} */}
         </div>
         <div className="space-x-2">
           <Button
@@ -258,3 +273,5 @@ export function DataTable() {
     </div>
   );
 }
+
+export default DataTable;

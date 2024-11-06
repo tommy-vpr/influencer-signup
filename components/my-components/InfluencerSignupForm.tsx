@@ -1,113 +1,161 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import React, { useEffect, useRef, useState } from "react";
+import { registerInfluencer } from "@/app/actions/influencer";
+import SubmitButton from "./SubmitButton";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { toast } from "react-hot-toast";
+import Link from "next/link";
+import { InfluencerSchema } from "@/lib/InfluencerSchema";
 
-import { toast } from "@/components/hooks/use-toast"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
+const InfluencerRegisterForm = () => {
+  const ref = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { data: session } = useSession();
+  const router = useRouter();
 
-const FormSchema = z.object({
-  email: z.string().min(1, {
-    message: "Enter your email",
-  }),
-  password: z.string().min(1, {
-    message: "Enter your password",
-  }),
-  state: z.string().min(1, {
-    message: "Enter your state",
-  }),
-})
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (session?.user) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
-export function InfluencerSignupForm() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      state: ""
-    },
-  })
+  const clientAction = async (formData: FormData) => {
+    setIsSubmitting(true);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
-  }
+    try {
+      // Convert formData to an object
+      const data = Object.fromEntries(formData.entries());
+
+      // Prepare influencer data and validate it
+      const newInfluencer = {
+        email: data.email as string,
+        state: data.state as string,
+        firstName: data.firstName as string,
+        lastName: data.lastName as string,
+        password: data.password as string,
+        code: data.code as string,
+      };
+
+      // Validate the input data with Zod schema
+      const validateInput = InfluencerSchema.safeParse(newInfluencer);
+
+      if (!validateInput.success) {
+        // Map errors to fields
+        const fieldErrors = validateInput.error.issues.reduce((acc, issue) => {
+          acc[issue.path[0]] = issue.message;
+          return acc;
+        }, {} as { [key: string]: string });
+
+        setErrors(fieldErrors);
+        return;
+      }
+
+      const response = await registerInfluencer(validateInput.data);
+
+      ref.current?.reset();
+
+      if (response?.error) {
+        toast.error(response.error);
+        return;
+      }
+
+      // Automatically sign in the user after successful registration
+      const signInResponse = await signIn("influencer-credentials", {
+        redirect: false,
+        email: validateInput.data.email,
+        code: validateInput.data.code,
+      });
+
+      if (signInResponse?.error) {
+        toast.error("Sign-in failed. Please try logging in.");
+      } else {
+        toast.success("Welcome! Litto Influencer");
+        router.push("/dashboard"); // Redirect to dashboard
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="w-full p-20">
-      <h3 className="text-2xl mb-8 font-semibold">Heard you wanted to be a LITTO influencer?</h3>
-      <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+    <div className="w-[500px] p-8 space-y-6 rounded-lg">
+      <h1 className="text-2xl font-bold text-center uppercase">
+        Influencer Signup
+      </h1>
+      <form action={clientAction} className="space-y-4" ref={ref}>
+        <div>
+          <label className="block text-sm font-medium">Email</label>
+          <input
+            type="email"
+            name="email"
+            className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
+          />
+          {errors.email && (
+            <p className="text-sm text-red-400">{errors.email}</p>
           )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="state"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>State</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full">Signup</Button>
-        
-        <div className="text-sm">
-        Have an account? &nbsp;
-        <Link href="/login" className="underline underline-offset-4 cursor-pointer">Login</Link>
-        
         </div>
+
+        <div>
+          <label className="block text-sm font-medium">First name</label>
+          <input
+            type="text"
+            name="firstName"
+            className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
+          />
+          {errors.firstName && (
+            <p className="text-sm text-red-400">{errors.firstName}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Last name</label>
+          <input
+            type="text"
+            name="lastName"
+            className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
+          />
+          {errors.lastName && (
+            <p className="text-sm text-red-400">{errors.lastName}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">State</label>
+          <input
+            type="text"
+            name="state"
+            className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
+          />
+          {errors.state && (
+            <p className="text-sm text-red-400">{errors.state}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Invitation Code</label>
+          <input
+            type="text"
+            name="code"
+            className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
+          />
+          {errors.code && <p className="text-sm text-red-400">{errors.code}</p>}
+        </div>
+
+        <SubmitButton isSubmitting={isSubmitting} />
       </form>
-    </Form>
+      <div className="text-sm">
+        Have an account?{" "}
+        <Link href="/login" className="underline underline-offset-2">
+          Login
+        </Link>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-
-
-export default InfluencerSignupForm
+export default InfluencerRegisterForm;

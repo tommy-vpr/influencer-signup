@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 import {
   Bell,
   CircleUser,
@@ -11,17 +11,17 @@ import {
   Package2,
   ShoppingCart,
   Users,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,25 +29,31 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-import Orders from '@/components/ui/Orders';
-import { ModeToggle } from '@/components/ui/ModeToggle';
-import { DataTable } from '@/components/my-components/Data';
-import InfluencerSignupForm from '@/components/my-components/InfluencerSignupForm';
+import Orders from "@/components/ui/Orders";
+import { ModeToggle } from "@/components/ui/ModeToggle";
+import { DataTable } from "@/components/my-components/Data";
+import InfluencerSignupForm from "@/components/my-components/InfluencerSignupForm";
+import Image from "next/image";
 
 export default function Dashboard() {
   return (
-      <div className='w-full flex h-screen'>
-        <div className='bg-[#101010] w-2/3'>
-          Welcome
-        </div>
-        <div className='flex items-center justify-center w-1/3'>
-        <InfluencerSignupForm />
-        </div>
+    <div className="w-full flex h-screen">
+      <div className="bg-[#101010] w-2/3 h-screen overflow-hidden relative">
+        <Image
+          src="/images/hero.webp"
+          alt="Hero Image"
+          layout="fill" // This makes the image cover the entire container
+          className="object-cover object-top" // Ensures the image maintains aspect ratio
+        />
       </div>
-  )
+      <div className="flex items-center justify-center w-1/3">
+        <InfluencerSignupForm />
+      </div>
+    </div>
+  );
   // return (
   //   <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
   //     <div className="hidden border-r bg-muted/40 md:block">

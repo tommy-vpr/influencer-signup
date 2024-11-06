@@ -1,56 +1,46 @@
+// src/app/auth/signin/page.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import SubmitButton from "./SubmitButton";
-import toast from "react-hot-toast";
+import SubmitButton from "@/components/my-components/SubmitButton";
+import { Lock } from "lucide-react";
 
-const InfluencerSignInSchema = z.object({
+const SignInSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
-  code: z.string().min(1, "Code is required"),
+  password: z.string().min(1, "Password is required"),
 });
 
-type InfluencerSignInFormData = z.infer<typeof InfluencerSignInSchema>;
+type SignInFormData = z.infer<typeof SignInSchema>;
 
-const InfluencerSignInPage: React.FC = () => {
+const SignInPage: React.FC = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const { data: session, status } = useSession();
-
-  // Check if the user is authenticated and redirect if necessary
-  useEffect(() => {
-    if (session?.user.role !== "influencer") {
-      router.push("/login");
-    }
-  }, [session, router]);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
-  } = useForm<InfluencerSignInFormData>({
-    resolver: zodResolver(InfluencerSignInSchema),
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(SignInSchema),
   });
 
-  const onSubmit = async (data: InfluencerSignInFormData) => {
+  const onSubmit = async (data: SignInFormData) => {
     setError(null);
 
-    const result = await signIn("influencer-credentials", {
+    const result = await signIn("credentials", {
       redirect: false,
       email: data.email,
-      code: data.code,
+      password: data.password,
     });
 
     if (result?.error) {
       setError(result.error);
     } else {
-      reset();
-      toast.success("Welcome!");
       router.push("/dashboard"); // Redirect on successful sign-in
     }
   };
@@ -58,9 +48,10 @@ const InfluencerSignInPage: React.FC = () => {
   return (
     <div className="max-w-md mx-auto">
       <h3 className="text-3xl font-semibold flex items-center gap-2">
-        Influencer Login
+        <Lock />
+        Admin Login
       </h3>
-      <p className="text-sm mb-8">* Must signup as an influencer first</p>
+      <p className="text-sm mb-8">* For admin use only </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block text-sm font-medium">Email</label>
@@ -75,14 +66,14 @@ const InfluencerSignInPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Invitation Code</label>
+          <label className="block text-sm font-medium">Password</label>
           <input
-            type="text"
-            {...register("code")}
+            type="password"
+            {...register("password")}
             className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
           />
-          {errors.code && (
-            <p className="text-sm text-red-400">{errors.code.message}</p>
+          {errors.password && (
+            <p className="text-sm text-red-400">{errors.password.message}</p>
           )}
         </div>
 
@@ -94,4 +85,4 @@ const InfluencerSignInPage: React.FC = () => {
   );
 };
 
-export default InfluencerSignInPage;
+export default SignInPage;

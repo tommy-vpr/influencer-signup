@@ -1,20 +1,23 @@
-'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 import {
+  Code,
   GraduationCap,
   Home,
   LineChart,
   NotebookPen,
   Users,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/badge";
+import { useSession } from "next-auth/react";
 
 const DashboardSideBar = () => {
   const pathName = usePathname();
+  const { data: session, status } = useSession();
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
@@ -29,48 +32,67 @@ const DashboardSideBar = () => {
             <Link
               href="/dashboard"
               className={clsx(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                 {
-                  'flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary':
-                    pathName === '/dashboard',
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/education",
                 }
-              )}>
+              )}
+            >
               <Home className="h-4 w-4" />
               Dashboard
             </Link>
             <Link
               href="/dashboard/education"
               className={clsx(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                 {
-                  'flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary':
-                    pathName === '/dashboard/education',
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/education",
                 }
-              )}>
+              )}
+            >
               <GraduationCap className="h-4 w-4" />
               Education
             </Link>
             <Link
               href="/dashboard/influencer-test"
               className={clsx(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                 {
-                  'flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary':
-                    pathName === '/dashboard/influencer-test',
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/influencer-test",
                 }
-              )}>
+              )}
+            >
               <NotebookPen className="h-4 w-4" />
               Test
             </Link>
+            {session?.user.role === "admin" && (
+              <Link
+                href="/dashboard/codes"
+                className={clsx(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                  {
+                    "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                      pathName === "/dashboard/codes",
+                  }
+                )}
+              >
+                <Code className="h-4 w-4" />
+                Codes
+              </Link>
+            )}
             <Link
               href="/dashboard/account"
               className={clsx(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                 {
-                  'flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary':
-                    pathName === '/dashboard/account',
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/account",
                 }
-              )}>
+              )}
+            >
               <Users className="h-4 w-4" />
               Account
             </Link>
