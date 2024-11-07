@@ -37,7 +37,7 @@ import {
 export type GeneratedCode = {
   id: string;
   status: boolean;
-  email: string;
+  email: string | null;
   code: string;
   createdAt: Date;
   updatedAt: Date;
