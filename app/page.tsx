@@ -38,15 +38,18 @@ import { DataTable } from "@/components/my-components/Data";
 import InfluencerSignupForm from "@/components/my-components/InfluencerSignupForm";
 import Image from "next/image";
 
+import heroImage from "@/assets/images/hero.webp";
+
 export default function Dashboard() {
   return (
     <div className="w-full flex h-screen">
       <div className="bg-[#101010] w-2/3 h-screen overflow-hidden relative">
         <Image
-          src="/images/hero.webp"
+          src={heroImage}
           alt="Hero Image"
-          layout="fill" // This makes the image cover the entire container
-          className="object-cover object-top" // Ensures the image maintains aspect ratio
+          fill
+          quality={100}
+          className="object-cover object-top"
         />
       </div>
       <div className="flex items-center justify-center w-1/3">
