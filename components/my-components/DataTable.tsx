@@ -36,7 +36,7 @@ import {
 
 export type GeneratedCode = {
   id: string;
-  status: Boolean;
+  status: boolean;
   email: string;
   code: string;
   createdAt: Date;
@@ -56,17 +56,15 @@ export const columns: ColumnDef<GeneratedCode>[] = [
   },
   {
     accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Email
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
@@ -121,7 +119,7 @@ export const columns: ColumnDef<GeneratedCode>[] = [
 ];
 
 interface DataTableProps {
-  data: GeneratedCode[]; // Define the type of data expected
+  data: GeneratedCode[];
 }
 
 export function DataTable({ data }: DataTableProps) {
@@ -132,10 +130,9 @@ export function DataTable({ data }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
-    pageSize: 10, // Set your default page size here
+    pageSize: 10,
   });
 
   const table = useReactTable({
@@ -156,7 +153,6 @@ export function DataTable({ data }: DataTableProps) {
       rowSelection,
       pagination,
     },
-    onPaginationChange: setPagination, // Update pagination state
   });
 
   return (
@@ -212,7 +208,7 @@ export function DataTable({ data }: DataTableProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -245,13 +241,6 @@ export function DataTable({ data }: DataTableProps) {
         <div className="flex-1 text-sm text-muted-foreground">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
-          {/* &nbsp;| Showing rows&nbsp;
-          {table.getRowModel().rows.length > 0
-            ? `${table.getRowModel().rows[0]?.index + 1} - ${
-                table.getRowModel().rows.slice(-1)[0]?.index + 1
-              }`
-            : 0}
-          &nbsp;of {table.getCoreRowModel().rows.length} */}
         </div>
         <div className="space-x-2">
           <Button
