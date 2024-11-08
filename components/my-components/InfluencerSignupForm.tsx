@@ -17,13 +17,6 @@ const InfluencerRegisterForm = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // Redirect to dashboard if already logged in
-  useEffect(() => {
-    if (session?.user) {
-      router.push("/dashboard");
-    }
-  }, [session, router]);
-
   const clientAction = async (formData: FormData) => {
     setIsSubmitting(true);
 

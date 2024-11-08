@@ -1,46 +1,22 @@
-import Link from "next/link";
-import {
-  Bell,
-  CircleUser,
-  GraduationCap,
-  Home,
-  LineChart,
-  Menu,
-  NotebookPen,
-  Package,
-  Package2,
-  ShoppingCart,
-  Users,
-} from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
-import Orders from "@/components/ui/Orders";
-import { ModeToggle } from "@/components/ui/ModeToggle";
-import { DataTable } from "@/components/my-components/Data";
+"use client";
 import InfluencerSignupForm from "@/components/my-components/InfluencerSignupForm";
 import Image from "next/image";
 
 import heroImage from "@/assets/images/hero.webp";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export default function Dashboard() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (session?.user) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
   return (
     <div className="w-full flex h-screen">
       <div className="bg-[#101010] w-2/3 h-screen overflow-hidden relative">
@@ -48,6 +24,7 @@ export default function Dashboard() {
           src={heroImage}
           alt="Hero Image"
           fill
+          priority
           quality={100}
           className="object-cover object-top"
         />

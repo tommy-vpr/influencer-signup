@@ -1,4 +1,3 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
@@ -37,7 +36,6 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Apply middleware to all routes, excluding static assets and Next.js-specific routes
 export const config = {
   matcher: "/((?!api|_next/static|_next/image|favicon.ico).*)",
 };
