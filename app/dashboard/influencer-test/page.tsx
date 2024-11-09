@@ -1,7 +1,8 @@
-import React from 'react';
+import QuizComponent from "@/components/my-components/QuizComponent";
+import React from "react";
 
 const page = () => {
-  return <div>Take your test</div>;
+  return <QuizComponent />;
 };
 
 export default page;

@@ -39,9 +39,11 @@ import { ModeToggle } from "@/components/ui/ModeToggle";
 import { DataTable } from "@/components/my-components/Data";
 
 import React from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const DashboardHeader = () => {
+  const { data: session, status } = useSession();
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -116,10 +118,11 @@ const DashboardHeader = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {session?.user.role === "admin" && (
+            <DropdownMenuItem>
+              <Link href="/dashboard/account">Setting</Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/login" })}>
             Logout
           </DropdownMenuItem>

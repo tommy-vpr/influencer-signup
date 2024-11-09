@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if the user is accessing a restricted admin-only route
-  const adminOnlyRoutes = ["/dashboard/codes"];
+  const adminOnlyRoutes = ["/dashboard/codes", "/dashboard/account"];
   if (adminOnlyRoutes.includes(request.nextUrl.pathname)) {
     // Restrict access to admin users only
     if (token.role !== "admin") {

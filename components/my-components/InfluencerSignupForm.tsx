@@ -9,6 +9,9 @@ import { z } from "zod";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { InfluencerSchema } from "@/lib/InfluencerSchema";
+import Image from "next/image";
+
+import stripes from "@/assets/images/stripes.png";
 
 const InfluencerRegisterForm = () => {
   const ref = useRef<HTMLFormElement>(null);
@@ -77,6 +80,12 @@ const InfluencerRegisterForm = () => {
 
   return (
     <div className="w-[500px] p-8 space-y-6 rounded-lg">
+      <Image
+        src={stripes}
+        height={180}
+        alt="litto secondary"
+        className="absolute top-6 right-6"
+      />
       <h1 className="text-2xl font-bold text-center uppercase">
         Influencer Signup
       </h1>

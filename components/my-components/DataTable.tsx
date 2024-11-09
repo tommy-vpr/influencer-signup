@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -34,6 +34,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import moment from "moment";
+import { ConfirmDialog } from "./ConfirmDialog";
+
 export type GeneratedCode = {
   id: string;
   status: boolean;
@@ -44,11 +47,6 @@ export type GeneratedCode = {
 };
 
 export const columns: ColumnDef<GeneratedCode>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
-  },
   {
     accessorKey: "code",
     header: "Code",
@@ -69,11 +67,11 @@ export const columns: ColumnDef<GeneratedCode>[] = [
   },
   {
     accessorKey: "status",
-    header: () => <div className="text-right">Status</div>,
+    header: () => <div className="text-left">Status</div>,
     cell: ({ row }) => {
       const isUsed = row.getValue("status");
       return (
-        <div className="text-right font-medium">
+        <div className="text-left font-medium">
           {!isUsed ? (
             <span className="w-[70px] text-center bg-green-100 text-green-800 text-xs font-medium py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 inline-block">
               Unused
@@ -88,31 +86,54 @@ export const columns: ColumnDef<GeneratedCode>[] = [
     },
   },
   {
+    accessorKey: "updatedAt",
+    header: "Used on",
+    cell: ({ row }) => {
+      // Access `createdAt` directly from `row.original`
+      const updatedAt = row.getValue("updatedAt") as Date | string | undefined;
+      const createdAt = row.original.createdAt; // `createdAt` is available in `row.original`
+
+      // Only display updatedAt if it differs from createdAt
+      const displayDate =
+        updatedAt && createdAt && !moment(updatedAt).isSame(moment(createdAt))
+          ? moment(updatedAt).subtract(10, "days").calendar()
+          : "N/A";
+
+      return <div className="capitalize">{displayDate}</div>;
+    },
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
+      const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+      const handleDelete = () => {
+        console.log(`Deleted item with ID: ${payment.id}`);
+        setIsDialogOpen(false);
+      };
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            <Trash2 className="h-4 w-4" aria-label="Delete" />
+          </Button>
+
+          <ConfirmDialog
+            isOpen={isDialogOpen}
+            title="Confirm Deletion"
+            description="Are you sure you want to delete this item? This action cannot be undone."
+            onConfirm={handleDelete}
+            onCancel={() => setIsDialogOpen(false)}
+            confirmLabel="Delete"
+            cancelLabel="Cancel"
+          />
+        </>
       );
     },
   },
@@ -146,6 +167,7 @@ export function DataTable({ data }: DataTableProps) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination, // Add this to handle pagination updates
     state: {
       sorting,
       columnFilters,

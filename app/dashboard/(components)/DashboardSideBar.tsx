@@ -35,7 +35,7 @@ const DashboardSideBar = () => {
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                 {
                   "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
-                    pathName === "/dashboard/education",
+                    pathName === "/dashboard",
                 }
               )}
             >
@@ -83,19 +83,21 @@ const DashboardSideBar = () => {
                 Codes
               </Link>
             )}
-            <Link
-              href="/dashboard/account"
-              className={clsx(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                {
-                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
-                    pathName === "/dashboard/account",
-                }
-              )}
-            >
-              <Users className="h-4 w-4" />
-              Account
-            </Link>
+            {session?.user.role === "admin" && (
+              <Link
+                href="/dashboard/account"
+                className={clsx(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                  {
+                    "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                      pathName === "/dashboard/account",
+                  }
+                )}
+              >
+                <Users className="h-4 w-4" />
+                Account
+              </Link>
+            )}
           </nav>
         </div>
         <div className="mt-auto p-4 text-xs text-center">
