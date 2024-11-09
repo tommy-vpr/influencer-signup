@@ -84,7 +84,7 @@ const InfluencerRegisterForm = () => {
         src={stripes}
         height={180}
         alt="litto secondary"
-        className="absolute top-6 right-6"
+        className="absolute top-6 right-6 invert"
       />
       <h1 className="text-2xl font-bold text-center uppercase">
         Influencer Signup
