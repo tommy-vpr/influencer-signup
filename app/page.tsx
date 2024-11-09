@@ -18,8 +18,8 @@ export default function Dashboard() {
     }
   }, [session, router]);
   return (
-    <div className="w-full flex h-screen">
-      <div className="bg-[#101010] w-2/3 h-screen overflow-hidden relative">
+    <div className="w-full flex h-screen flex-col lg:flex-row">
+      <div className="bg-[#101010] w-full lg:w-2/3 h-screen overflow-hidden relative">
         <Image
           src={heroImage}
           alt="Hero Image"
@@ -29,7 +29,7 @@ export default function Dashboard() {
           className="object-cover object-top"
         />
       </div>
-      <div className="flex items-center justify-center w-1/3">
+      <div className="flex items-center justify-center lg:w-1/3 relative">
         <InfluencerSignupForm />
       </div>
     </div>

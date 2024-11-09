@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { registerInfluencer } from "@/app/actions/influencer";
 import SubmitButton from "./SubmitButton";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { InfluencerSchema } from "@/lib/InfluencerSchema";
@@ -24,10 +23,8 @@ const InfluencerRegisterForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Convert formData to an object
       const data = Object.fromEntries(formData.entries());
 
-      // Prepare influencer data and validate it
       const newInfluencer = {
         email: data.email as string,
         state: data.state as string,
@@ -37,11 +34,9 @@ const InfluencerRegisterForm = () => {
         code: data.code as string,
       };
 
-      // Validate the input data with Zod schema
       const validateInput = InfluencerSchema.safeParse(newInfluencer);
 
       if (!validateInput.success) {
-        // Map errors to fields
         const fieldErrors = validateInput.error.issues.reduce((acc, issue) => {
           acc[issue.path[0]] = issue.message;
           return acc;
@@ -60,7 +55,6 @@ const InfluencerRegisterForm = () => {
         return;
       }
 
-      // Automatically sign in the user after successful registration
       const signInResponse = await signIn("influencer-credentials", {
         redirect: false,
         email: validateInput.data.email,
@@ -71,7 +65,7 @@ const InfluencerRegisterForm = () => {
         toast.error("Sign-in failed. Please try logging in.");
       } else {
         toast.success("Welcome! Litto Influencer");
-        router.push("/dashboard"); // Redirect to dashboard
+        router.push("/dashboard");
       }
     } finally {
       setIsSubmitting(false);
@@ -79,12 +73,12 @@ const InfluencerRegisterForm = () => {
   };
 
   return (
-    <div className="w-[500px] p-8 space-y-6 rounded-lg">
+    <div className="w-full max-w-[500px] p-4 sm:p-8 space-y-6 rounded-lg mx-auto">
       <Image
         src={stripes}
         height={180}
         alt="litto secondary"
-        className="absolute top-6 right-6 invert"
+        className="absolute top-6 right-6 invert hidden sm:block"
       />
       <h1 className="text-2xl font-bold text-center uppercase">
         Influencer Signup
@@ -150,7 +144,7 @@ const InfluencerRegisterForm = () => {
 
         <SubmitButton isSubmitting={isSubmitting} />
       </form>
-      <div className="text-sm">
+      <div className="text-sm text-center">
         Have an account?{" "}
         <Link href="/login" className="underline underline-offset-2">
           Login
