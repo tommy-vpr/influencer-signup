@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   Bell,
   CircleUser,
+  Code,
   GraduationCap,
   Home,
   LineChart,
@@ -63,7 +64,7 @@ const DashboardHeader = () => {
               <span className="sr-only">Acme Inc</span>
             </Link>
             <Link
-              href="/dashboard"
+              href="/dashboard/codes"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
             >
               <Home className="h-5 w-5" />
@@ -77,17 +78,17 @@ const DashboardHeader = () => {
               Education
             </Link>
             <Link
-              href="/dashboard/test"
+              href="/dashboard/codes"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
             >
-              <Package className="h-5 w-5" />
+              <Code className="h-5 w-5" />
               Influencer Test
             </Link>
             <Link
-              href="/dashboard/test"
+              href="/dashboard/codes"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
             >
-              <Package className="h-5 w-5" />
+              <Code className="h-5 w-5" />
               Influencer Test
             </Link>
             <Button onClick={() => signOut({ callbackUrl: "/login" })}>
