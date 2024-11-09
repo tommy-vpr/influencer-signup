@@ -56,50 +56,43 @@ const DashboardHeader = () => {
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
             <Link
-              href="#"
+              href="/"
               className="flex items-center gap-2 text-lg font-semibold"
             >
               <Package2 className="h-6 w-6" />
               <span className="sr-only">Acme Inc</span>
             </Link>
             <Link
-              href="#"
+              href="/dashboard"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
             >
               <Home className="h-5 w-5" />
               Dashboard
             </Link>
             <Link
-              href="#"
+              href="/dashboard/education"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
             >
               <GraduationCap className="h-5 w-5" />
               Education
-              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                6
-              </Badge>
             </Link>
             <Link
-              href="#"
+              href="/dashboard/test"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
             >
               <Package className="h-5 w-5" />
-              Products
+              Influencer Test
             </Link>
             <Link
-              href="#"
+              href="/dashboard/test"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
             >
-              <Users className="h-5 w-5" />
-              Customers
+              <Package className="h-5 w-5" />
+              Influencer Test
             </Link>
-            <Link
-              href="#"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-            >
-              <LineChart className="h-5 w-5" />
-              Analytics
-            </Link>
+            <Button onClick={() => signOut({ callbackUrl: "/login" })}>
+              Signout
+            </Button>
           </nav>
           <div className="mt-auto">
             <Button size="sm" className="w-full">
