@@ -19,9 +19,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -36,17 +33,10 @@ import {
 
 import moment from "moment";
 import { ConfirmDialog } from "./ConfirmDialog";
+// Prisma import
+import { GeneratedCodes } from "@prisma/client";
 
-export type GeneratedCode = {
-  id: string;
-  status: boolean;
-  email: string | null;
-  code: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export const columns: ColumnDef<GeneratedCode>[] = [
+export const columns: ColumnDef<GeneratedCodes>[] = [
   {
     accessorKey: "code",
     header: "Code",
@@ -139,9 +129,9 @@ export const columns: ColumnDef<GeneratedCode>[] = [
   },
 ];
 
-interface DataTableProps {
-  data: GeneratedCode[];
-}
+type DataTableProps = {
+  data: GeneratedCodes[];
+};
 
 export function DataTable({ data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
