@@ -46,12 +46,12 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <>
-      <h3 className="text-3xl font-semibold flex items-center gap-2">
+    <div className="border p-4 rounded-lg">
+      <h3 className="text-3xl font-semibold flex items-center justify-center gap-2 w-full">
         <Lock />
         Admin Login
       </h3>
-      <p className="mb-8">* For admin use only </p>
+      <p className="mb-8 text-center">* For admin use only </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block font-medium">Email</label>
@@ -81,7 +81,7 @@ const SignInPage: React.FC = () => {
 
         <SubmitButton isSubmitting={isSubmitting} />
       </form>
-    </>
+    </div>
   );
 };
 

@@ -76,76 +76,82 @@ const AdminRegisterForm = () => {
   };
 
   return (
-    <div className="w-full max-w-[500px] p-4 sm:p-8 space-y-6 rounded-lg mx-auto">
+    <div className="relative w-full h-screen flex items-center justify-center">
       <Image
         src={stripes}
         height={180}
         alt="litto secondary"
         className="absolute top-6 right-6 invert hidden sm:block"
       />
-      <h1 className="text-2xl font-bold text-center uppercase flex items-center justify-center gap-2">
-        <User size={24} /> Admin Register
-      </h1>
-      <form onSubmit={clientAction} className="space-y-4" ref={ref}>
-        <div>
-          <label className="block font-medium">Email</label>
-          <input
-            type="email"
-            name="email"
-            className="w-full px-4 py-2 mt-1 border rounded-md"
-          />
-          {errors.email && <p className="text-red-400">{errors.email}</p>}
-        </div>
+      <div className="w-full max-w-[500px] p-4 space-y-6 rounded-lg mx-auto border">
+        <h1 className="text-2xl font-bold text-center uppercase flex items-center justify-center gap-2">
+          <User size={24} /> Admin Register
+        </h1>
+        <form onSubmit={clientAction} className="space-y-4" ref={ref}>
+          <div>
+            <label className="block font-medium">Email</label>
+            <input
+              type="email"
+              name="email"
+              className="w-full px-4 py-2 mt-1 border rounded-md"
+            />
+            {errors.email && <p className="text-red-400">{errors.email}</p>}
+          </div>
 
-        <div>
-          <label className="block font-medium">First name</label>
-          <input
-            type="text"
-            name="firstName"
-            className="w-full px-4 py-2 mt-1 border rounded-md"
-          />
-          {errors.firstName && (
-            <p className="text-red-400">{errors.firstName}</p>
-          )}
-        </div>
+          <div>
+            <label className="block font-medium">First name</label>
+            <input
+              type="text"
+              name="firstName"
+              className="w-full px-4 py-2 mt-1 border rounded-md"
+            />
+            {errors.firstName && (
+              <p className="text-red-400">{errors.firstName}</p>
+            )}
+          </div>
 
-        <div>
-          <label className="block font-medium">Last name</label>
-          <input
-            type="text"
-            name="lastName"
-            className="w-full px-4 py-2 mt-1 border rounded-md"
-          />
-          {errors.lastName && <p className="text-red-400">{errors.lastName}</p>}
-        </div>
+          <div>
+            <label className="block font-medium">Last name</label>
+            <input
+              type="text"
+              name="lastName"
+              className="w-full px-4 py-2 mt-1 border rounded-md"
+            />
+            {errors.lastName && (
+              <p className="text-red-400">{errors.lastName}</p>
+            )}
+          </div>
 
-        <div>
-          <label className="block font-medium">Password</label>
-          <input
-            type="password"
-            name="password"
-            className="w-full px-4 py-2 mt-1 border rounded-md"
-          />
-          {errors.password && <p className="text-red-400">{errors.password}</p>}
-        </div>
+          <div>
+            <label className="block font-medium">Password</label>
+            <input
+              type="password"
+              name="password"
+              className="w-full px-4 py-2 mt-1 border rounded-md"
+            />
+            {errors.password && (
+              <p className="text-red-400">{errors.password}</p>
+            )}
+          </div>
 
-        <div>
-          <label className="block font-medium">Admin Code</label>
-          <input
-            type="text"
-            name="code"
-            className="w-full px-4 py-2 mt-1 border rounded-md"
-          />
-          {errors.code && <p className="text-red-400">{errors.code}</p>}
-        </div>
+          <div>
+            <label className="block font-medium">Admin Code</label>
+            <input
+              type="text"
+              name="code"
+              className="w-full px-4 py-2 mt-1 border rounded-md"
+            />
+            {errors.code && <p className="text-red-400">{errors.code}</p>}
+          </div>
 
-        <SubmitButton isSubmitting={isSubmitting} />
-      </form>
-      <div className="text-center">
-        Have an account?{" "}
-        <Link href="/login" className="underline underline-offset-2">
-          Login
-        </Link>
+          <SubmitButton isSubmitting={isSubmitting} />
+        </form>
+        <div className="text-center">
+          Have an account?{" "}
+          <Link href="/login" className="underline underline-offset-2">
+            Login
+          </Link>
+        </div>
       </div>
     </div>
   );

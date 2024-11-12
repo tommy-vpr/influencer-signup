@@ -14,7 +14,7 @@ export default function LoginFormSwitcher() {
       <div className="w-[400px]">
         {isAdminLogin ? <AdminLoginForm /> : <InfluencerLoginForm />}
 
-        <div className="text-sm mt-4 flex gap-2">
+        <div className="text-sm mt-4 flex gap-2 justify-center">
           <p>
             <Link
               href="/"
