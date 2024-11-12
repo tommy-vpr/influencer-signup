@@ -46,42 +46,42 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
+    <>
       <h3 className="text-3xl font-semibold flex items-center gap-2">
         <Lock />
         Admin Login
       </h3>
-      <p className="text-sm mb-8">* For admin use only </p>
+      <p className="mb-8">* For admin use only </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium">Email</label>
+          <label className="block font-medium">Email</label>
           <input
             type="email"
             {...register("email")}
-            className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
+            className="w-full px-4 py-2 mt-1 border rounded-md"
           />
           {errors.email && (
-            <p className="text-sm text-red-400">{errors.email.message}</p>
+            <p className="text-red-400">{errors.email.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Password</label>
+          <label className="block font-medium">Password</label>
           <input
             type="password"
             {...register("password")}
-            className="w-full px-4 py-2 mt-1 text-sm border rounded-md"
+            className="w-full px-4 py-2 mt-1 border rounded-md"
           />
           {errors.password && (
-            <p className="text-sm text-red-400">{errors.password.message}</p>
+            <p className="text-red-400">{errors.password.message}</p>
           )}
         </div>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-red-400">{error}</p>}
 
         <SubmitButton isSubmitting={isSubmitting} />
       </form>
-    </div>
+    </>
   );
 };
 

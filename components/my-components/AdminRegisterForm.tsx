@@ -1,40 +1,40 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { registerInfluencer } from "@/app/actions/influencer";
+import { registerUser } from "@/app/actions/admin";
 import SubmitButton from "./SubmitButton";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { InfluencerSchema } from "@/lib/InfluencerSchema";
+import { UserSchema } from "@/lib/InfluencerSchema";
 import Image from "next/image";
-
 import stripes from "@/assets/images/stripes.png";
+import { User } from "lucide-react";
 
-const InfluencerRegisterForm = () => {
+const AdminRegisterForm = () => {
   const ref = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const { data: session } = useSession();
   const router = useRouter();
 
-  const clientAction = async (formData: FormData) => {
+  const clientAction = async (event: React.FormEvent) => {
+    event.preventDefault(); // Prevent form from submitting the default way
     setIsSubmitting(true);
 
-    try {
-      const data = Object.fromEntries(formData.entries());
+    const formData = new FormData(ref.current!);
+    const data = Object.fromEntries(formData.entries());
 
-      const newInfluencer = {
+    try {
+      const newAdmin = {
         email: data.email as string,
-        state: data.state as string,
         firstName: data.firstName as string,
         lastName: data.lastName as string,
         password: data.password as string,
         code: data.code as string,
       };
 
-      const validateInput = InfluencerSchema.safeParse(newInfluencer);
+      const validateInput = UserSchema.safeParse(newAdmin);
 
       if (!validateInput.success) {
         const fieldErrors = validateInput.error.issues.reduce((acc, issue) => {
@@ -46,17 +46,17 @@ const InfluencerRegisterForm = () => {
         return;
       }
 
-      const response = await registerInfluencer(validateInput.data);
+      const response = await registerUser(validateInput.data);
 
       if (response?.error) {
         toast.error(response.error);
         return;
       }
 
-      const signInResponse = await signIn("influencer-credentials", {
+      const signInResponse = await signIn("credentials", {
         redirect: false,
         email: validateInput.data.email,
-        code: validateInput.data.code,
+        password: validateInput.data.password,
       });
 
       ref.current?.reset();
@@ -64,9 +64,12 @@ const InfluencerRegisterForm = () => {
       if (signInResponse?.error) {
         toast.error("Sign-in failed. Please try logging in.");
       } else {
-        toast.success("Welcome! Litto Influencer");
+        toast.success("Welcome!");
         router.push("/dashboard");
       }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      toast.error("An unexpected error occurred. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
@@ -80,10 +83,10 @@ const InfluencerRegisterForm = () => {
         alt="litto secondary"
         className="absolute top-6 right-6 invert hidden sm:block"
       />
-      <h1 className="text-2xl font-bold text-center uppercase">
-        Influencer Signup
+      <h1 className="text-2xl font-bold text-center uppercase flex items-center justify-center gap-2">
+        <User size={24} /> Admin Register
       </h1>
-      <form action={clientAction} className="space-y-4" ref={ref}>
+      <form onSubmit={clientAction} className="space-y-4" ref={ref}>
         <div>
           <label className="block font-medium">Email</label>
           <input
@@ -117,17 +120,17 @@ const InfluencerRegisterForm = () => {
         </div>
 
         <div>
-          <label className="block font-medium">State</label>
+          <label className="block font-medium">Password</label>
           <input
-            type="text"
-            name="state"
+            type="password"
+            name="password"
             className="w-full px-4 py-2 mt-1 border rounded-md"
           />
-          {errors.state && <p className="text-red-400">{errors.state}</p>}
+          {errors.password && <p className="text-red-400">{errors.password}</p>}
         </div>
 
         <div>
-          <label className="block font-medium">Invitation Code</label>
+          <label className="block font-medium">Admin Code</label>
           <input
             type="text"
             name="code"
@@ -148,4 +151,4 @@ const InfluencerRegisterForm = () => {
   );
 };
 
-export default InfluencerRegisterForm;
+export default AdminRegisterForm;

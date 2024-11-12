@@ -86,7 +86,7 @@ export const columns: ColumnDef<GeneratedCodes>[] = [
       // Only display updatedAt if it differs from createdAt
       const displayDate =
         updatedAt && createdAt && !moment(updatedAt).isSame(moment(createdAt))
-          ? moment(updatedAt).subtract(10, "days").calendar()
+          ? moment(updatedAt).format("MM/DD/YYYY")
           : "N/A";
 
       return <div className="capitalize">{displayDate}</div>;

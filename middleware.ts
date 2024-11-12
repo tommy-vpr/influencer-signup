@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
-  const publicRoutes = ["/", "/login"];
+  const publicRoutes = ["/", "/login", "/register"];
 
   // Allow access to public routes without authentication
   if (publicRoutes.includes(request.nextUrl.pathname)) {

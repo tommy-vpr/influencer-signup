@@ -3,16 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
-import {
-  Code,
-  GraduationCap,
-  Home,
-  LineChart,
-  NotebookPen,
-  Users,
-} from "lucide-react";
+import { Code, GraduationCap, Home, NotebookPen, Users } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
 
 const DashboardSideBar = () => {

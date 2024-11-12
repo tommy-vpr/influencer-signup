@@ -1,5 +1,6 @@
 "use client";
 
+import SubmitButton from "@/components/my-components/SubmitButton";
 import { User, User2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
@@ -92,7 +93,7 @@ const page = () => {
         <>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="block font-medium text-gray-700 dark:text-gray-300">
                 Current Password
               </label>
               <input
@@ -108,7 +109,7 @@ const page = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="block font-medium text-gray-700 dark:text-gray-300">
                 New Password
               </label>
               <input
@@ -130,7 +131,8 @@ const page = () => {
               <p className="text-green-500 text-sm">{successMessage}</p>
             )}
 
-            <button
+            <SubmitButton isSubmitting={isSubmitting} />
+            {/* <button
               type="submit"
               disabled={isSubmitting}
               className={`w-full py-2 rounded-md ${
@@ -140,7 +142,7 @@ const page = () => {
               }`}
             >
               {isSubmitting ? "Updating..." : "Update Password"}
-            </button>
+            </button> */}
           </form>
         </>
       </div>
